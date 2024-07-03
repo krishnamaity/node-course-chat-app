@@ -9,7 +9,7 @@ const port=process.env.PORT || 3000
 
 var server=http.createServer(app)
 const io = socketIo(server); 
-// const publicpath=path.join(__dirname ,'../public')
+
   app.use(express.static(publicpath))
 
 app.get('/', function(req, res) {
@@ -18,10 +18,23 @@ app.get('/', function(req, res) {
 
   io.on('connection',(socket)=>{
     console.log('new user connected');
-    socket.on('disconnect',()=>{
-        console.log('user disconnected')
-      })
+    
+
+    socket.emit('newMessage',{
+           
+        from:'krish',
+        text:"hello krish",
+        createdAt:123321
+    })
+
+  socket.on('createMessage',(message)=>{
+    console.log('createmessage',message)
   })
+    socket.on('disconnect',()=>{
+    console.log('user disconnected')
+  })
+  })
+ 
  
 server.listen(port,()=>{
     console.log(`server is run at port ${port}`);
