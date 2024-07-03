@@ -1,13 +1,28 @@
 
 const path=require('path');
-const express=require('express')
-const app=express();
+const express=require('express');
+const http=require('http')
+const socketIo=require('socket.io');
+var app=express();
+const publicpath=path.join(__dirname,"../public")
 const port=process.env.PORT || 3000
-const publicpath=path.join(__dirname ,'../public')
-app.use(express.static(publicpath))
 
+var server=http.createServer(app)
+const io = socketIo(server); 
+// const publicpath=path.join(__dirname ,'../public')
+  app.use(express.static(publicpath))
 
+app.get('/', function(req, res) {
+    res.sendFile(path.join(publicPath, 'index.html'));
+  });
 
-app.listen(port,()=>{
+  io.on('connection',(socket)=>{
+    console.log('new user connected');
+    socket.on('disconnect',()=>{
+        console.log('user disconnected')
+      })
+  })
+ 
+server.listen(port,()=>{
     console.log(`server is run at port ${port}`);
 })
